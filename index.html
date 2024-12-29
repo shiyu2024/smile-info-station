@@ -9,84 +9,118 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>记得微笑的信息站 - 分享阅读与生活的美好时光</title>
     <link rel="stylesheet" href="styles.css">
-    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
-    <script src='//unpkg.com/leancloud-storage/dist/av-min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.12.0/dist/av-min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
 </head>
 <body>
     <div class="floating-shapes"></div>
     <div class="container">
         <header>
             <h1 class="typewriter">记得微笑的信息站</h1>
-            <p class="subtitle">今天也要开开心心的呀 ~</p>
-            <nav>
-                <ul>
-                    <li><a href="books.html" class="nav-item">📚 书籍记录
-                        <span class="tooltip">记录每一次阅读的收获</span>
-                    </a></li>
-                    <li><a href="life.html" class="nav-item">📝 生活心得
-                        <span class="tooltip">分享生活中的小确幸</span>
-                    </a></li>
-                    <li><a href="monthly.html" class="nav-item">📅 每月总结
-                        <span class="tooltip">回顾成长的点点滴滴</span>
-                    </a></li>
-                    <li><a href="inspiration.html" class="nav-item">💡 灵感存放
-                        <span class="tooltip">捕捉稍纵即逝的想法</span>
-                    </a></li>
-                </ul>
-            </nav>
+            <div class="subtitle-wrapper">
+                <p class="subtitle" id="typing-text"></p>
+            </div>
         </header>
 
         <main>
-            <div class="content-grid">
-                <section class="content-box">
-                    <h2>���� 最新阅读</h2>
-                    <ul class="list">
+            <!-- 创意导航区域 -->
+            <div class="feature-cards">
+                <a href="books.html" class="feature-card books">
+                    <div class="card-icon">📚</div>
+                    <h3>书籍记录</h3>
+                    <p>记录每一次阅读的收获</p>
+                </a>
+                <a href="life.html" class="feature-card life">
+                    <div class="card-icon">📝</div>
+                    <h3>生活心得</h3>
+                    <p>分享生活中的小确幸</p>
+                </a>
+                <a href="monthly.html" class="feature-card monthly">
+                    <div class="card-icon">📅</div>
+                    <h3>每月总结</h3>
+                    <p>回顾成长的点点滴滴</p>
+                </a>
+                <a href="inspiration.html" class="feature-card inspiration">
+                    <div class="card-icon">💡</div>
+                    <h3>灵感存放</h3>
+                    <p>捕捉稍纵即逝的想法</p>
+                </a>
+            </div>
+
+            <!-- 内容展示区域 -->
+            <div class="content-showcase">
+                <div class="showcase-section latest-reads">
+                    <div class="section-header">
+                        <span class="icon">📚</span>
+                        <h2>最阅读</h2>
+                    </div>
+                    <ul class="showcase-list">
                         <li>《认知觉醒》读后感</li>
                         <li>《原子习惯》笔记</li>
                         <li>《深度工作》重点摘抄</li>
                     </ul>
-                </section>
+                </div>
 
-                <section class="content-box">
-                    <h2>📝 近期心得</h2>
-                    <ul class="list">
+                <div class="showcase-section recent-thoughts">
+                    <div class="section-header">
+                        <span class="icon">📝</span>
+                        <h2>近期心得</h2>
+                    </div>
+                    <ul class="showcase-list">
                         <li>如何提高工作效率</li>
                         <li>每日习惯养成方法</li>
                         <li>时间管理技巧分享</li>
                     </ul>
-                </section>
+                </div>
 
-                <section class="content-box">
-                    <h2>💡 最新灵感</h2>
-                    <ul class="list">
-                        <li>个人博�����版构思</li>
+                <div class="showcase-section latest-inspiration">
+                    <div class="section-header">
+                        <span class="icon">💡</span>
+                        <h2>最新灵感</h2>
+                    </div>
+                    <ul class="showcase-list">
+                        <li>个人博客改版构思</li>
                         <li>读书笔记系统设计</li>
                         <li>生活效率工具开发</li>
                     </ul>
-                </section>
+                </div>
             </div>
-        </main>
 
-        <section class="contact-section">
-            <div class="contact-card">
-                <h3>📬 留言板</h3>
-                <div id="vcomments"></div>
-            </div>
-            
-            <div class="contact-card qq-card">
-                <h3>💬 联系我</h3>
-                <div class="qq-info">
-                    <img src="https://q1.qlogo.cn/g?b=qq&nk=2141234454&s=100" alt="QQ头像" class="qq-avatar">
-                    <div class="qq-detail">
-                        <p>QQ: 2141234454</p>
-                        <a href="tencent://message/?uin=2141234454" class="qq-link">
-                            点击添加好友
-                            <span class="qq-hover-tip">期待与你交流！</span>
-                        </a>
+            <!-- 联系部分 -->
+            <div class="contact-area">
+                <!-- 留言板 -->
+                <div class="contact-section message-board">
+                    <div class="section-header">
+                        <div class="header-icon">💌</div>
+                        <h2>留言板</h2>
+                    </div>
+                    <div class="message-content">
+                        <div id="vcomments"></div>
+                    </div>
+                </div>
+
+                <!-- QQ联系卡片 -->
+                <div class="contact-section qq-card">
+                    <div class="section-header">
+                        <div class="header-icon">💬</div>
+                        <h2>联系我</h2>
+                    </div>
+                    <div class="qq-content">
+                        <div class="qq-avatar-wrapper">
+                            <img src="https://q1.qlogo.cn/g?b=qq&nk=2141234454&s=100" alt="QQ头像" class="qq-avatar">
+                            <div class="avatar-glow"></div>
+                        </div>
+                        <div class="qq-info">
+                            <p class="qq-number">QQ: 2141234454</p>
+                            <a href="tencent://message/?uin=2141234454" class="qq-button">
+                                <span class="button-icon">➕</span>
+                                <span class="button-text">添加好友</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </main>
 
         <footer>
             <p>记得微笑，保持学习 © 2024</p>
@@ -94,15 +128,49 @@
     </div>
 
     <script>
-        new Valine({
-            el: '#vcomments',
-            appId: 'luZZpOFMr3pLq06GIuvl7F3w-gzGzoHsz',
-            appKey: 'IHtrVZAXj3CUpKkA1X2cfQbU',
-            placeholder: '有什么想说的吗？写在这里吧~',
-            avatar: 'monsterid',
-            meta: ['nick', 'mail'],
-            requiredFields: ['nick'],
-            lang: 'zh-CN'
+        // 等待文档加载完成后再初始化 Valine
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化 Valine
+            new Valine({
+                el: '#vcomments',
+                appId: 'luZZpOFMr3pLq06GIuvl7F3w-gzGzoHsz',
+                appKey: 'IHtrVZAXj3CUpKkA1X2cfQbU',
+                placeholder: '说点什么吧...',
+                avatar: 'monsterid',
+                meta: ['nick', 'mail'],
+                pageSize: 10,
+                lang: 'zh-CN',
+                highlight: true,
+                recordIP: true,
+                serverURLs: 'https://luzzpofm.lc-cn-n1-shared.com',
+                visitor: true
+            });
+
+            // 渐变文字动画代码保持不变
+            const messages = [
+                "专注事，专注自己",
+                "不被理解才是你脱颖而出的法宝",
+                "猛虎眼中无沟壑",
+                "怂人眼前全是坎",
+                "今天也要开开心心的呀 ~"
+            ];
+
+            let currentIndex = 0;
+            const subtitleElement = document.getElementById('typing-text');
+
+            function updateText() {
+                subtitleElement.style.opacity = '0';
+                setTimeout(() => {
+                    subtitleElement.textContent = messages[currentIndex];
+                    subtitleElement.style.opacity = '1';
+                    currentIndex = (currentIndex + 1) % messages.length;
+                }, 500);
+            }
+
+            // 立即显示第一条文字
+            updateText();
+            // 每5秒切换一次文字
+            setInterval(updateText, 5000);
         });
     </script>
 </body>
