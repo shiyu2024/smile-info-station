@@ -9,6 +9,8 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>记得微笑的信息站 - 分享阅读与生活的美好时光</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
     <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
 </head>
 <body>
@@ -51,7 +53,7 @@
                 <div class="showcase-section latest-reads">
                     <div class="section-header">
                         <span class="icon">📚</span>
-                        <h2>最新阅读</h2>
+                        <h2>最阅读</h2>
                     </div>
                     <ul class="showcase-list">
                         <li>《钢铁是怎样练成的》读后感</li>
@@ -111,7 +113,7 @@
                         </div>
                         <div class="qq-info">
                             <p class="qq-number">QQ: 2141234454</p>
-                            <a href="mqqwpa://im/chat?chat_type=wpa&uin=2141234454&version=1&src_type=web" class="qq-button">
+                            <a href="tencent://message/?uin=2141234454" class="qq-button">
                                 <span class="button-icon">➕</span>
                                 <span class="button-text">添加好友</span>
                             </a>
@@ -128,6 +130,17 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const gitalk = new Gitalk({
+                clientID: 'Ov23lipxBIhvZ8PCgB7I',
+                clientSecret: '25c6ac6a21b4a065ac9d8e885849046074c84a7c',
+                repo: 'smile-info-station',
+                owner: 'shiyu2024',
+                admin: ['shiyu2024'],
+                id: location.pathname.substring(0, 50),
+                distractionFreeMode: false
+            });
+            gitalk.render('vcomments');
+
             // 渐变文字动画代码保持不变
             const messages = [
                 "网站刚开始搭建很多功能还没有",
@@ -153,19 +166,18 @@
             setInterval(updateText, 5000);
         });
 
-        // 初始化 Valine
         new Valine({
             el: '#vcomments',
             appId: 'luZZpOFMr3pLq06GIuvl7F3w-gzGzoHsz',
             appKey: 'IHtrVZAXj3CUpKkA1X2cfQbU',
             placeholder: '说点什么吧...',
             avatar: 'monsterid',
-            meta: [],
-            requiredFields: [],
+            meta: ['nick'],
+            requiredFields: ['nick'],
             enableQQ: true,
             visitor: true,
             recordIP: false
         });
     </script>
 </body>
-</html>
+</html> 
