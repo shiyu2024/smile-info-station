@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://shiyu2024.github.io/smile-info-station/sitemap.xml 

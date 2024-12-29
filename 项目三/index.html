@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="记得微笑的个人信息站 - 分享读书笔记、生活心得、月度总结和创意灵感">
+    <meta name="keywords" content="读书笔记,生活心得,个人博客,知识管理,学习笔记">
+    <meta name="author" content="记得微笑">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>记得微笑的信息站 - 分享阅读与生活的美好时光</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+</head>
+<body>
+    <div class="floating-shapes"></div>
+    <div class="container">
+        <header>
+            <h1 class="typewriter">记得微笑的信息站</h1>
+            <div class="subtitle-wrapper">
+                <p class="subtitle" id="typing-text"></p>
+            </div>
+        </header>
+
+        <main>
+            <!-- 创意导航区域 -->
+            <div class="feature-cards">
+                <a href="books.html" class="feature-card books">
+                    <div class="card-icon">📚</div>
+                    <h3>书籍记录</h3>
+                    <p>记录每一次阅读的收获</p>
+                </a>
+                <a href="life.html" class="feature-card life">
+                    <div class="card-icon">📝</div>
+                    <h3>生活心得</h3>
+                    <p>分享生活中的小确幸</p>
+                </a>
+                <a href="monthly.html" class="feature-card monthly">
+                    <div class="card-icon">📅</div>
+                    <h3>每月总结</h3>
+                    <p>回顾成长的点点滴滴</p>
+                </a>
+                <a href="inspiration.html" class="feature-card inspiration">
+                    <div class="card-icon">💡</div>
+                    <h3>灵感存放</h3>
+                    <p>捕捉稍纵即逝的想法</p>
+                </a>
+            </div>
+
+            <!-- 内容展示区域 -->
+            <div class="content-showcase">
+                <div class="showcase-section latest-reads">
+                    <div class="section-header">
+                        <span class="icon">📚</span>
+                        <h2>最阅读</h2>
+                    </div>
+                    <ul class="showcase-list">
+                        <li>《钢铁是怎样练成的》读后感</li>
+                        <li>《撒哈拉的故事》笔记</li>
+                        <li>《尼采在中世纪的转折》重点摘抄</li>
+                    </ul>
+                </div>
+
+                <div class="showcase-section recent-thoughts">
+                    <div class="section-header">
+                        <span class="icon">📝</span>
+                        <h2>近期心得</h2>
+                    </div>
+                    <ul class="showcase-list">
+                        <li>如何睡足12个小时</li>
+                        <li>如何在食堂吃两口饭</li>
+                        <li>如何沉浸式刷抖音</li>
+                    </ul>
+                </div>
+
+                <div class="showcase-section latest-inspiration">
+                    <div class="section-header">
+                        <span class="icon">💡</span>
+                        <h2>最新灵感</h2>
+                    </div>
+                    <ul class="showcase-list">
+                        <li>网站改进思路</li>
+                        <li>最新进展</li>
+                        <li>生活效率工具开发</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 联系部分 -->
+            <div class="contact-area">
+                <!-- 留言板 -->
+                <div class="contact-section message-board">
+                    <div class="section-header">
+                        <div class="header-icon">💌</div>
+                        <h2>留言板</h2>
+                    </div>
+                    <div class="message-content">
+                        <div id="vcomments"></div>
+                    </div>
+                </div>
+
+                <!-- QQ联系卡片 -->
+                <div class="contact-section qq-card">
+                    <div class="section-header">
+                        <div class="header-icon">💬</div>
+                        <h2>联系我</h2>
+                    </div>
+                    <div class="qq-content">
+                        <div class="qq-avatar-wrapper">
+                            <img src="https://q1.qlogo.cn/g?b=qq&nk=2141234454&s=100" alt="QQ头像" class="qq-avatar">
+                            <div class="avatar-glow"></div>
+                        </div>
+                        <div class="qq-info">
+                            <p class="qq-number">QQ: 2141234454</p>
+                            <a href="tencent://message/?uin=2141234454" class="qq-button">
+                                <span class="button-icon">➕</span>
+                                <span class="button-text">添加好友</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>记得微笑，保持学习 © 2024</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const gitalk = new Gitalk({
+                clientID: 'Ov23lipxBIhvZ8PCgB7I',
+                clientSecret: '25c6ac6a21b4a065ac9d8e885849046074c84a7c',
+                repo: 'smile-info-station',
+                owner: 'shiyu2024',
+                admin: ['shiyu2024'],
+                id: location.pathname.substring(0, 50),
+                distractionFreeMode: false
+            });
+            gitalk.render('vcomments');
+
+            // 渐变文字动画代码保持不变
+            const messages = [
+                "网站刚开始搭建很多功能还没有",
+                "不被理解才是你脱颖而出的法宝",
+                "有什么意见可以在下方留言",
+                "目前在尝试看能不能接入好用的大模型的API实现网站的AI对话",
+                "后续会不断的维护和更新网站，后期将打造出一个较为全面的网站"
+            ];
+
+            let currentIndex = 0;
+            const subtitleElement = document.getElementById('typing-text');
+
+            function updateText() {
+                subtitleElement.style.opacity = '0';
+                setTimeout(() => {
+                    subtitleElement.textContent = messages[currentIndex];
+                    subtitleElement.style.opacity = '1';
+                    currentIndex = (currentIndex + 1) % messages.length;
+                }, 500);
+            }
+
+            updateText();
+            setInterval(updateText, 5000);
+        });
+
+        new Valine({
+            el: '#vcomments',
+            appId: 'luZZpOFMr3pLq06GIuvl7F3w-gzGzoHsz',
+            appKey: 'IHtrVZAXj3CUpKkA1X2cfQbU',
+            placeholder: '说点什么吧...',
+            avatar: 'monsterid',
+            meta: ['nick'],
+            requiredFields: ['nick'],
+            enableQQ: true,
+            visitor: true,
+            recordIP: false
+        });
+    </script>
+</body>
+</html> 
