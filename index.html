@@ -9,8 +9,8 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>记得微笑的信息站 - 分享阅读与生活的美好时光</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.12.0/dist/av-min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 </head>
 <body>
     <div class="floating-shapes"></div>
@@ -128,23 +128,17 @@
     </div>
 
     <script>
-        // 等待文档加载完成后再初始化 Valine
         document.addEventListener('DOMContentLoaded', function() {
-            // 初始化 Valine
-            new Valine({
-                el: '#vcomments',
-                appId: 'luZZpOFMr3pLq06GIuvl7F3w-gzGzoHsz',
-                appKey: 'IHtrVZAXj3CUpKkA1X2cfQbU',
-                placeholder: '说点什么吧...',
-                avatar: 'monsterid',
-                meta: ['nick', 'mail'],
-                pageSize: 10,
-                lang: 'zh-CN',
-                highlight: true,
-                recordIP: true,
-                serverURLs: 'https://luzzpofm.lc-cn-n1-shared.com',
-                visitor: true
+            const gitalk = new Gitalk({
+                clientID: 'Ov23lipxBIhvZ8PCgB7I',
+                clientSecret: '25c6ac6a21b4a065ac9d8e885849046074c84a7c',
+                repo: 'smile-info-station',
+                owner: 'shiyu2024',
+                admin: ['shiyu2024'],
+                id: location.pathname.substring(0, 50),
+                distractionFreeMode: false
             });
+            gitalk.render('vcomments');
 
             // 渐变文字动画代码保持不变
             const messages = [
@@ -167,9 +161,7 @@
                 }, 500);
             }
 
-            // 立即显示第一条文字
             updateText();
-            // 每5秒切换一次文字
             setInterval(updateText, 5000);
         });
     </script>
