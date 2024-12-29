@@ -9,9 +9,11 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>记得微笑的信息站 - 分享阅读与生活的美好时光</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
-    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
-    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <!-- Valine 最新版本 -->
+    <script src="https://unpkg.com/valine@1.5.1/dist/Valine.min.js"></script>
+    <!-- LeanCloud SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.12.0/dist/av-min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js'></script>
 </head>
 <body>
     <div class="floating-shapes"></div>
@@ -28,13 +30,13 @@
             <div class="feature-cards">
                 <a href="books.html" class="feature-card books">
                     <div class="card-icon">📚</div>
-                    <h3>书籍记录</h3>
-                    <p>记录每一次阅读的收获</p>
+                    <h3>书籍分享</h3>
+                    <p>分享好书和读书心得</p>
                 </a>
                 <a href="life.html" class="feature-card life">
-                    <div class="card-icon">📝</div>
-                    <h3>生活心得</h3>
-                    <p>分享生活中的小确幸</p>
+                    <div class="card-icon">🌟</div>
+                    <h3>生活随笔</h3>
+                    <p>记录生活的点点滴滴</p>
                 </a>
                 <a href="monthly.html" class="feature-card monthly">
                     <div class="card-icon">📅</div>
@@ -43,8 +45,8 @@
                 </a>
                 <a href="inspiration.html" class="feature-card inspiration">
                     <div class="card-icon">💡</div>
-                    <h3>灵感存放</h3>
-                    <p>捕捉稍纵即逝的想法</p>
+                    <h3>创意灵感</h3>
+                    <p>分享有趣的想法</p>
                 </a>
             </div>
 
@@ -52,37 +54,40 @@
             <div class="content-showcase">
                 <div class="showcase-section latest-reads">
                     <div class="section-header">
-                        <span class="icon">📚</span>
-                        <h2>最阅读</h2>
+                        <span class="icon">🌐</span>
+                        <h2>常用网站</h2>
                     </div>
                     <ul class="showcase-list">
-                        <li>《钢铁是怎样练成的》读后感</li>
-                        <li>《撒哈拉的故事》笔记</li>
-                        <li>《尼采在中世纪的转折》重点摘抄</li>
+                        <li><a href="https://www.douyin.com" target="_blank" class="site-link">抖音 - 记录美好生活</a></li>
+                        <li><a href="https://www.bilibili.com" target="_blank" class="site-link">哔哩哔哩 - 视频创作分享</a></li>
+                        <li><a href="https://www.xiaohongshu.com" target="_blank" class="site-link">小红书 - 分享生活社区</a></li>
+                        <li><a href="https://www.scemi.com/index.htm" target="_blank" class="site-link">机电学院</a></li>
                     </ul>
                 </div>
 
                 <div class="showcase-section recent-thoughts">
                     <div class="section-header">
-                        <span class="icon">📝</span>
-                        <h2>近期心得</h2>
+                        <span class="icon">🔖</span>
+                        <h2>实用网站</h2>
                     </div>
                     <ul class="showcase-list">
-                        <li>如何睡足12个小时</li>
-                        <li>如何在食堂吃两口饭</li>
-                        <li>如何沉浸式刷抖音</li>
+                        <li><a href="https://www.remove.bg/zh" target="_blank" class="site-link">Remove.bg - 在线抠图工具</a></li>
+                        <li><a href="https://www.z-library.org" target="_blank" class="site-link">Z-Library - 免费电子书下载</a></li>
+                        <li><a href="https://www.kkys03.com" target="_blank" class="site-link">免费看全网影视资源</a></li>
+                        <li><a href="https://www.deepl.com/translator" target="_blank" class="site-link">DeepL - 免费在线翻译</a></li>
                     </ul>
                 </div>
 
                 <div class="showcase-section latest-inspiration">
                     <div class="section-header">
-                        <span class="icon">💡</span>
-                        <h2>最新灵感</h2>
+                        <span class="icon">🛠️</span>
+                        <h2>推荐工具</h2>
                     </div>
                     <ul class="showcase-list">
-                        <li>网站改进思路</li>
-                        <li>最新进展</li>
-                        <li>生活效率工具开发</li>
+                        <li><a href="https://tinypng.com" target="_blank" class="site-link">TinyPNG - 图片压缩工具</a></li>
+                        <li><a href="https://www.photopea.com" target="_blank" class="site-link">Photopea - 在线PS工具</a></li>
+                        <li><a href="https://convertio.co/zh" target="_blank" class="site-link">Convertio - 文件格式转换</a></li>
+                        <li><a href="https://www.processon.com" target="_blank" class="site-link">ProcessOn - 在线作图工具</a></li>
                     </ul>
                 </div>
             </div>
@@ -96,6 +101,7 @@
                         <h2>留言板</h2>
                     </div>
                     <div class="message-content">
+                        <p class="message-tips">在下方留言，无需登录，填写昵称即可~</p>
                         <div id="vcomments"></div>
                     </div>
                 </div>
@@ -113,7 +119,7 @@
                         </div>
                         <div class="qq-info">
                             <p class="qq-number">QQ: 2141234454</p>
-                            <a href="tencent://message/?uin=2141234454" class="qq-button">
+                            <a href="mqqwpa://im/chat?chat_type=wpa&uin=2141234454&version=1&src_type=web" class="qq-button">
                                 <span class="button-icon">➕</span>
                                 <span class="button-text">添加好友</span>
                             </a>
@@ -130,17 +136,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const gitalk = new Gitalk({
-                clientID: 'Ov23lipxBIhvZ8PCgB7I',
-                clientSecret: '25c6ac6a21b4a065ac9d8e885849046074c84a7c',
-                repo: 'smile-info-station',
-                owner: 'shiyu2024',
-                admin: ['shiyu2024'],
-                id: location.pathname.substring(0, 50),
-                distractionFreeMode: false
-            });
-            gitalk.render('vcomments');
-
             // 渐变文字动画代码保持不变
             const messages = [
                 "网站刚开始搭建很多功能还没有",
@@ -164,20 +159,42 @@
 
             updateText();
             setInterval(updateText, 5000);
-        });
 
-        new Valine({
-            el: '#vcomments',
-            appId: 'luZZpOFMr3pLq06GIuvl7F3w-gzGzoHsz',
-            appKey: 'IHtrVZAXj3CUpKkA1X2cfQbU',
-            placeholder: '说点什么吧...',
-            avatar: 'monsterid',
-            meta: ['nick'],
-            requiredFields: ['nick'],
-            enableQQ: true,
-            visitor: true,
-            recordIP: false
+            // 初始化 Valine
+            setTimeout(() => {
+                const valine = new Valine({
+                    el: '#vcomments',
+                    appId: 'luZZpOFMr3pLq06GIuvl7F3w-gzGzoHsz',
+                    appKey: 'IHtrVZAXj3CUpKkA1X2cfQbU',
+                    placeholder: '说点什么吧...(无需登录)',
+                    avatar: 'monsterid',
+                    meta: ['nick'],
+                    requiredFields: ['nick'],
+                    enableQQ: false,
+                    visitor: true,
+                    recordIP: false,
+                    path: window.location.pathname,
+                    pageSize: 2,
+                    maxNest: 1,
+                    lang: 'zh-CN'
+                });
+
+                // 将评论列表移动到历史留言区域
+                const observer = new MutationObserver((mutations) => {
+                    const commentsList = document.querySelector('.v .vlist');
+                    const historyList = document.getElementById('vcomments-list');
+                    if (commentsList && historyList) {
+                        historyList.innerHTML = '';
+                        historyList.appendChild(commentsList.cloneNode(true));
+                    }
+                });
+
+                observer.observe(document.getElementById('vcomments'), {
+                    childList: true,
+                    subtree: true
+                });
+            }, 500);
         });
     </script>
 </body>
-</html> 
+</html>

@@ -464,45 +464,135 @@ footer {
 
 /* 留言板样式 */
 .message-board {
-    min-height: 400px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .message-content {
-    height: 100%;
+    padding: 20px;
+}
+
+#vcomments {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 20px;
 }
 
 /* Valine 评论框样式 */
-#vcomments .vwrap {
-    border: 1px solid #e2e8f0;
+.v[data-class=v] .vwrap {
+    border: 1px solid rgba(59,130,246,0.2);
     border-radius: 8px;
-    margin-top: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background: white;
 }
 
-#vcomments .vwrap input {
-    border: 1px solid #e2e8f0;
-    border-radius: 4px;
-    padding: 8px 12px;
+.v[data-class=v] .veditor {
+    min-height: 100px !important;
+    padding: 10px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    background: white !important;
+    width: 100% !important;
+    resize: vertical !important;
 }
 
-#vcomments .veditor {
-    min-height: 100px;
-    border-radius: 4px;
-    padding: 8px 12px;
+.v[data-class=v] .vinput {
+    border: 1px solid #e0e0e0 !important;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    background: white !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
 }
 
-#vcomments .vbtn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
+.v[data-class=v] .vbtn {
+    display: inline-block !important;
+    background: var(--primary-color) !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+.v[data-class=v] .vbtn:hover {
+    background: var(--hover-color) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.2) !important;
+}
+
+/* 评论列表样式 */
+.v[data-class=v] .vlist {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+}
+
+.v[data-class=v] .vcard {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(59, 130, 246, 0.1);
     transition: all 0.3s ease;
 }
 
-#vcomments .vbtn:hover {
-    background: var(--hover-color);
+.v[data-class=v] .vcard:last-child {
+    margin-bottom: 0;
+}
+
+.v[data-class=v] .vcard:hover {
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+.v[data-class=v] .vhead {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.v[data-class=v] .vnick {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.v[data-class=v] .vtime {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.v[data-class=v] .vcontent {
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 14px;
+    padding: 8px 0;
+}
+
+/* 自定义滚动条 */
+.v[data-class=v] .vlist::-webkit-scrollbar {
+    width: 6px;
+}
+
+.v[data-class=v] .vlist::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+}
+
+.v[data-class=v] .vlist::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+.v[data-class=v] .vlist::-webkit-scrollbar-thumb:hover {
+    background: var(--hover-color);
 }
 
 /* 动画效果 */
@@ -896,49 +986,97 @@ footer {
 }
 
 .v[data-class=v] .veditor {
-    min-height: 120px;
-    padding: 12px;
-    font-size: 14px;
-    background: #f8fafc;
-    border: 1px solid rgba(59,130,246,0.2);
-    border-radius: 6px;
-    transition: all 0.3s ease;
+    min-height: 100px !important;
+    background-color: #fff !important;
+    padding: 10px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
-.v[data-class=v] .veditor:focus {
-    border-color: var(--primary-color);
-    background: white;
-    box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+.v[data-class=v] .vinput {
+    padding: 8px 12px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
 }
 
 .v[data-class=v] .vbtn {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    display: inline-block !important;
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+    margin-top: 10px !important;
+    position: relative !important;
+    z-index: 1 !important;
 }
 
 .v[data-class=v] .vbtn:hover {
-    background: var(--hover-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59,130,246,0.2);
+    background-color: var(--hover-color) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
+}
+
+.v[data-class=v] .vwrap {
+    position: relative !important;
+    z-index: 0 !important;
+}
+
+.v[data-class=v] .vrow {
+    position: relative !important;
+    z-index: 0 !important;
+}
+
+.v[data-class=v] .vemoji-btn {
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.v[data-class=v] .veditor {
+    position: relative !important;
+    z-index: 0 !important;
+    min-height: 100px !important;
+    padding: 10px !important;
+    resize: vertical !important;
+    width: 100% !important;
+    border-radius: 4px !important;
+    border: 1px solid #e0e0e0 !important;
+    font-size: 14px !important;
+    background-color: white !important;
+}
+
+.v[data-class=v] .vinput {
+    border: 1px solid #e0e0e0 !important;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    background: white !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
 }
 
 .v[data-class=v] .vcard {
-    padding: 15px;
-    border-radius: 8px;
-    background: #f8fafc;
-    margin-bottom: 15px;
-    transition: all 0.3s ease;
+    padding: 15px !important;
+    background: #f8fafc !important;
+    border-radius: 8px !important;
+    margin-bottom: 15px !important;
+    transition: all 0.3s ease !important;
 }
 
 .v[data-class=v] .vcard:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
 }
 
 /* 返回按钮样式 */
@@ -1041,4 +1179,276 @@ footer {
     position: absolute;
     left: 0;
     color: var(--primary-color);
+}
+
+.message-content {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.message-tips {
+    text-align: center;
+    color: #666;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+.comments-container {
+    min-height: 200px;
+    margin-top: 10px;
+}
+
+/* Valine 评论样式优化 */
+#vcomments .vwrap {
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#vcomments .vlist {
+    padding: 10px;
+}
+
+#vcomments .vcard {
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+#vcomments .vnick {
+    color: #333;
+    font-weight: bold;
+}
+
+#vcomments .vsubmit {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#vcomments .vsubmit:hover {
+    background-color: #45a049;
+}
+
+.site-link {
+    text-decoration: none;
+    color: var(--text-primary);
+    display: block;
+    transition: all 0.3s ease;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.site-link:hover {
+    color: white;
+    background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+    transform: translateX(10px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+}
+
+.showcase-list li {
+    margin: 10px 0;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.showcase-list li:hover {
+    background: none;
+    padding: 0;
+}
+
+.showcase-section .icon {
+    font-size: 1.2em;
+    background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+}
+
+.book-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.book-item:hover {
+    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+}
+
+.book-title {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.download-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.download-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.download-icon {
+    font-size: 1.1em;
+}
+
+.comments-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.comment-form {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.history-comments {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.history-title {
+    color: var(--primary-color);
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.1);
+}
+
+.comments-list {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* 自定义滚动条 */
+.comments-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.comments-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 3px;
+}
+
+.comments-list::-webkit-scrollbar-thumb:hover {
+    background: var(--hover-color);
+}
+
+/* 评论卡片样式 */
+.v[data-class=v] .vcard {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    transition: all 0.3s ease;
+}
+
+.v[data-class=v] .vcard:last-child {
+    margin-bottom: 0;
+}
+
+.v[data-class=v] .vcard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+/* 评论内容样式 */
+.v[data-class=v] .vhead {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.v[data-class=v] .vnick {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.v[data-class=v] .vtime {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.v[data-class=v] .vcontent {
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 14px;
+    padding: 8px 0;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .comments-list {
+        max-height: 250px;
+    }
+}
+
+.v[data-class=v] .vpage {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.v[data-class=v] .vpage .vmore {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.v[data-class=v] .vpage .vmore:hover {
+    background: var(--hover-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.v[data-class=v] .vempty {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 14px;
 } 
