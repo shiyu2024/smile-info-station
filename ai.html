@@ -34,6 +34,9 @@
             border-radius: 24px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
         }
 
         .chat-header {
@@ -362,11 +365,7 @@
 
         /* 操作按钮样式 */
         .action-buttons {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            display: flex;
-            gap: 10px;
+            display: none;
         }
 
         .clear-history-btn, .new-chat-btn {
@@ -413,15 +412,307 @@
                 padding: 6px 12px;
             }
         }
+
+        /* 侧边导航栏样式 */
+        .side-nav {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: var(--card-bg);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .side-nav.open {
+            left: 0;
+        }
+
+        .chat-container {
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .side-nav.open + .chat-container {
+            transform: translateX(250px);
+        }
+
+        .nav-header {
+            padding: 20px;
+            padding-left: 60px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .nav-title {
+            font-size: 1.2em;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .close-nav {
+            cursor: pointer;
+            font-size: 1.5em;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .close-nav:hover {
+            color: var(--text-primary);
+            transform: rotate(90deg);
+        }
+
+        .nav-menu {
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: rgba(79, 70, 229, 0.1);
+            padding-left: 25px;
+        }
+
+        .nav-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-item i {
+            font-size: 1.2em;
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-toggle {
+            position: fixed;
+            left: 25px;
+            top: 25px;
+            width: 32px;
+            height: 32px;
+            background: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .menu-toggle.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .menu-toggle:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .side-nav {
+                width: 100%;
+                left: -100%;
+            }
+
+            .side-nav.open + .chat-container {
+                transform: translateX(0);
+                opacity: 0.3;
+                pointer-events: none;
+            }
+
+            .menu-toggle {
+                width: 28px;
+                height: 28px;
+                font-size: 1em;
+            }
+        }
+
+        /* 历史记录模态框样式 */
+        .history-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .history-modal.show {
+            display: flex;
+        }
+
+        .history-content {
+            background: var(--card-bg);
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .history-header h2 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 1.5em;
+        }
+
+        .close-history {
+            cursor: pointer;
+            font-size: 1.5em;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .close-history:hover {
+            color: var(--text-primary);
+            transform: rotate(90deg);
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 15px;
+        }
+
+        .history-item {
+            background: var(--bg-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .delete-history {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--error-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            z-index: 1;
+        }
+
+        .history-item:hover .delete-history {
+            opacity: 1;
+        }
+
+        .delete-history:hover {
+            transform: scale(1.1);
+            background: #dc2626;
+        }
+
+        .history-item .time {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .history-item .preview {
+            color: var(--text-primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
     <div class="floating-shapes"></div>
-    <a href="index.html" class="back-button">
-        <span>←</span>
-        返回首页
-    </a>
     
+    <!-- 菜单按钮 -->
+    <div class="menu-toggle" onclick="toggleNav()">☰</div>
+
+    <!-- 侧边导航栏 -->
+    <div class="side-nav" id="sideNav">
+        <div class="nav-header">
+            <span class="nav-title">微笑AI助手</span>
+            <span class="close-nav" onclick="toggleNav()">×</span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html" class="nav-item">
+                <i>🏠</i>
+                <span>返回首页</span>
+            </a>
+            <div class="nav-item" onclick="showHistory()">
+                <i>📜</i>
+                <span>历史记录</span>
+            </div>
+            <div class="nav-item" onclick="startNewChat()">
+                <i>💭</i>
+                <span>新对话</span>
+            </div>
+            <div class="nav-item" onclick="clearHistory()">
+                <i>🗑️</i>
+                <span>删除历史</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 添加历史记录模态框 -->
+    <div class="history-modal" id="historyModal">
+        <div class="history-content">
+            <div class="history-header">
+                <h2>历史对话记录</h2>
+                <span class="close-history" onclick="closeHistory()">×</span>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- 历史记录将在这里动态添加 -->
+            </div>
+        </div>
+    </div>
+
     <div class="chat-container">
         <div class="chat-header">
             <h1>微笑AI 智能对话助手</h1>
@@ -469,10 +760,13 @@
 
         // 清除历史记录
         function clearHistory() {
-            messageHistory = [];
-            localStorage.removeItem('chatHistory');
-            document.getElementById('chatMessages').innerHTML = '';
-            loadHistory(); // 重新加载欢迎消息
+            if (confirm('确定要清除所有历史记录吗？')) {
+                localStorage.removeItem('allChatHistory');
+                messageHistory = [];
+                document.getElementById('chatMessages').innerHTML = '';
+                loadHistory(); // 重新加载欢迎消息
+                closeHistory(); // 关闭历史记录窗口
+            }
         }
 
         // 添加操作按钮
@@ -498,16 +792,17 @@
 
         // 开始新对话
         function startNewChat() {
-            // 保留历史记录但清空聊天界面
+            if (messageHistory.length > 1) { // 如果有实际的对话内容
+                saveNewChatToHistory();
+            }
             document.getElementById('chatMessages').innerHTML = '';
-            // 添加新的欢迎消息
             const welcomeMessage = {
                 role: 'assistant',
                 content: '你好！让我们开始新的对话吧。有什么我可以帮你的吗？'
             };
-            addMessage(welcomeMessage);
-            // 重置消息历史但保留在localStorage中的完整历史
             messageHistory = [welcomeMessage];
+            addMessage(welcomeMessage);
+            toggleNav();
         }
 
         // 页面加载时初始化
@@ -654,6 +949,117 @@
             const indicator = document.getElementById('typingIndicator');
             if (indicator) {
                 indicator.remove();
+            }
+        }
+
+        // 添加导航栏控制函数
+        function toggleNav() {
+            const sideNav = document.getElementById('sideNav');
+            const menuToggle = document.querySelector('.menu-toggle');
+            sideNav.classList.toggle('open');
+            menuToggle.classList.toggle('hidden');
+        }
+
+        function showHistory() {
+            const historyModal = document.getElementById('historyModal');
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = ''; // 清空现有内容
+
+            // 从localStorage获取所有历史记录
+            const allHistory = getAllHistoryFromStorage();
+            
+            // 显示历史记录
+            allHistory.forEach((history, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                // 添加删除按钮
+                const deleteBtn = document.createElement('div');
+                deleteBtn.className = 'delete-history';
+                deleteBtn.innerHTML = '×';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation(); // 阻止事件冒泡
+                    deleteHistoryItem(index);
+                };
+                
+                const time = document.createElement('div');
+                time.className = 'time';
+                time.textContent = new Date(history.timestamp).toLocaleString();
+
+                const preview = document.createElement('div');
+                preview.className = 'preview';
+                preview.textContent = history.messages[0].content.substring(0, 100) + '...';
+
+                historyItem.appendChild(deleteBtn);
+                historyItem.appendChild(time);
+                historyItem.appendChild(preview);
+                historyItem.onclick = () => loadHistoryChat(index);
+                
+                historyList.appendChild(historyItem);
+            });
+
+            historyModal.classList.add('show');
+            toggleNav(); // 关闭侧边导航
+        }
+
+        function closeHistory() {
+            const historyModal = document.getElementById('historyModal');
+            historyModal.classList.remove('show');
+        }
+
+        function getAllHistoryFromStorage() {
+            const histories = [];
+            const savedHistory = localStorage.getItem('allChatHistory');
+            if (savedHistory) {
+                const parsedHistory = JSON.parse(savedHistory);
+                histories.push(...parsedHistory);
+            }
+            return histories;
+        }
+
+        function loadHistoryChat(index) {
+            const allHistory = getAllHistoryFromStorage();
+            if (allHistory[index]) {
+                messageHistory = [...allHistory[index].messages];
+                document.getElementById('chatMessages').innerHTML = '';
+                messageHistory.forEach(message => addMessage(message));
+                closeHistory();
+            }
+        }
+
+        // 保存新对话到历史记录
+        function saveNewChatToHistory() {
+            if (messageHistory.length <= 1) return; // 如果只有欢迎消息，不保存
+
+            const newChat = {
+                timestamp: Date.now(),
+                messages: [...messageHistory] // 创建消息历史的深拷贝
+            };
+
+            const savedHistory = localStorage.getItem('allChatHistory');
+            let allHistory = savedHistory ? JSON.parse(savedHistory) : [];
+            allHistory.unshift(newChat);
+            localStorage.setItem('allChatHistory', JSON.stringify(allHistory));
+        }
+
+        // 删除单个历史记录
+        function deleteHistoryItem(index) {
+            if (confirm('确定要删除这条历史记录吗？')) {
+                const savedHistory = localStorage.getItem('allChatHistory');
+                if (savedHistory) {
+                    const parsedHistory = JSON.parse(savedHistory);
+                    parsedHistory.splice(index, 1);
+                    localStorage.setItem('allChatHistory', JSON.stringify(parsedHistory));
+                }
+                
+                // 如果删除的是当前显示的对话，则清空当前对话
+                if (index === 0) {
+                    messageHistory = [];
+                    document.getElementById('chatMessages').innerHTML = '';
+                    loadHistory(); // 重新加载欢迎消息
+                }
+                
+                showHistory(); // 重新显示历史记录列表
             }
         }
     </script>

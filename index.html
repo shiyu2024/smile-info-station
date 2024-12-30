@@ -99,6 +99,7 @@
                     <div class="section-header">
                         <div class="header-icon">💌</div>
                         <h2>留言板</h2>
+                        <div class="login-note">登录后可进行留言</div>
                     </div>
                     <div class="message-content">
                         <!-- 未登录状态 -->
@@ -488,6 +489,35 @@
                 
                 .contact-section {
                     min-height: 200px;
+                }
+            }
+
+            /* 留言板样式 */
+            .section-header {
+                position: relative;
+                margin-bottom: 15px;
+            }
+
+            .login-note {
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 0.9em;
+                color: var(--text-secondary);
+                background: rgba(79, 70, 229, 0.1);
+                padding: 4px 12px;
+                border-radius: 15px;
+                transition: all 0.3s ease;
+            }
+
+            @media (max-width: 480px) {
+                .login-note {
+                    position: static;
+                    transform: none;
+                    text-align: center;
+                    margin-top: 8px;
+                    font-size: 0.8em;
                 }
             }
         `;

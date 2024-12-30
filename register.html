@@ -124,6 +124,119 @@
         .back-link a:hover {
             text-decoration: underline;
         }
+
+        .avatar-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            overflow: hidden;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-btn {
+            padding: 8px 20px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .upload-btn:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .avatar-tip {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .register-form {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .register-btn:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -131,64 +244,84 @@
         <div class="register-header">
             <h2>注册账号</h2>
         </div>
-        <form class="register-form" id="registerForm">
-            <div class="avatar-upload">
+        <div class="register-form">
+            <div class="avatar-section">
                 <div class="avatar-preview">
                     <img id="avatarPreview" src="default-avatar.png" alt="头像预览">
                 </div>
-                <label for="avatar">
-                    选择头像
-                    <input type="file" id="avatar" name="avatar" accept="image/*" required>
-                </label>
+                <div class="avatar-upload">
+                    <label for="avatarInput" class="upload-btn">选择头像</label>
+                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                    <p class="avatar-tip" id="avatarTip">请选择一个头像图片（必选）</p>
+                </div>
             </div>
             <div class="form-group">
-                <label for="username">账号</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" placeholder="用户名" required>
             </div>
             <div class="form-group">
-                <label for="password">密码</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" placeholder="密码" required>
             </div>
             <div class="form-group">
-                <label for="confirmPassword">确认密码</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <input type="password" id="confirmPassword" placeholder="确认密码" required>
             </div>
-            <button type="submit" class="register-button">注册</button>
-        </form>
+            <button onclick="register()" class="register-btn">注册</button>
+            <p class="login-link">已有账号？<a href="login.html">立即登录</a></p>
+        </div>
         <div class="back-link">
             <a href="index.html">返回首页</a>
         </div>
     </div>
 
     <script>
-        // 头像预览功能
-        document.getElementById('avatar').addEventListener('change', function(e) {
+        let selectedAvatar = null;
+
+        document.getElementById('avatarInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('avatarPreview').src = e.target.result;
+                    selectedAvatar = e.target.result;
+                    document.getElementById('avatarTip').style.color = '#10B981';
+                    document.getElementById('avatarTip').textContent = '头像已选择';
                 }
                 reader.readAsDataURL(file);
             }
         });
 
-        // 表单提交处理
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
+        function register() {
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            const avatar = document.getElementById('avatarPreview').src;
+            
+            // 验证头像
+            if (!selectedAvatar) {
+                document.getElementById('avatarTip').style.color = '#EF4444';
+                document.getElementById('avatarTip').textContent = '请选择头像后再注册';
+                return;
+            }
 
+            // 验证用户名
+            if (username === '') {
+                alert('请输入用户名');
+                return;
+            }
+
+            // 验证密码
+            if (password === '') {
+                alert('请输入密码');
+                return;
+            }
+
+            // 验证密码确认
             if (password !== confirmPassword) {
-                alert('两次输入的密码不一致！');
+                alert('两次输入的密码不一致');
                 return;
             }
 
             // 检查用户名是否已存在
             if (localStorage.getItem('user_' + username)) {
-                alert('该用户名已被注册！');
+                alert('用户名已存在');
                 return;
             }
 
@@ -196,19 +329,13 @@
             const userData = {
                 username: username,
                 password: password,
-                avatar: avatar,
-                registerTime: new Date().toISOString()
+                avatar: selectedAvatar
             };
 
-            // 存储用户数据
             localStorage.setItem('user_' + username, JSON.stringify(userData));
-
-            // 自动登录
-            localStorage.setItem('currentUser', username);
-
             alert('注册成功！');
-            window.location.href = 'index.html';
-        });
+            window.location.href = 'login.html';
+        }
     </script>
 </body>
 </html> 
