@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>围棋 - 休闲游戏</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .game-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--hover-color);
+        }
+
+        #goboard {
+            width: 100%;
+            max-width: 600px;
+            height: 600px;
+            margin: 0 auto;
+            position: relative;
+            background: #DEB887;
+            border: 2px solid #8b4513;
+            cursor: pointer;
+        }
+
+        .grid-line {
+            position: absolute;
+            background: #000;
+        }
+
+        .horizontal {
+            height: 1px;
+            width: calc(100% - 40px);
+            left: 20px;
+        }
+
+        .vertical {
+            width: 1px;
+            height: calc(100% - 40px);
+            top: 20px;
+        }
+
+        .stone {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            margin: -14px 0 0 -14px;
+            transition: all 0.2s ease;
+            z-index: 1;
+        }
+
+        .stone.black {
+            background: radial-gradient(circle at 30% 30%, #666, #000);
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .stone.white {
+            background: radial-gradient(circle at 30% 30%, #fff, #ddd);
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .stone.preview {
+            opacity: 0.5;
+        }
+
+        .game-controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .control-btn {
+            padding: 8px 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--hover-color);
+        }
+
+        .game-info {
+            margin: 20px 0;
+            text-align: center;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .turn-indicator {
+            font-size: 1.2em;
+        }
+
+        .score {
+            display: flex;
+            gap: 20px;
+        }
+
+        .score-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .score-stone {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .score-stone.black {
+            background: #000;
+        }
+
+        .score-stone.white {
+            background: #fff;
+            border: 1px solid #000;
+        }
+
+        .star-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 50%;
+            margin: -4px 0 0 -4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game-container">
+            <div class="game-header">
+                <h1>围棋</h1>
+                <a href="index.html" class="back-btn">返回首页</a>
+            </div>
+            <div class="game-info">
+                <div class="turn-indicator">当前回合: <span id="currentTurn">黑方</span></div>
+                <div class="score">
+                    <div class="score-item">
+                        <div class="score-stone black"></div>
+                        <span id="blackScore">提子: 0</span>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-stone white"></div>
+                        <span id="whiteScore">提子: 0</span>
+                    </div>
+                </div>
+            </div>
+            <div id="goboard"></div>
+            <div class="game-controls">
+                <button class="control-btn" onclick="startNewGame()">新游戏</button>
+                <button class="control-btn" onclick="undoMove()">悔棋</button>
+                <button class="control-btn" onclick="pass()">虚着</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPlayer = 'black';
+        const boardSize = 19;
+        let board = Array(boardSize).fill().map(() => Array(boardSize).fill(null));
+        let moveHistory = [];
+        let scores = { black: 0, white: 0 };
+        let consecutivePasses = 0;
+
+        // 初始化棋盘
+        function initBoard() {
+            const goboard = document.getElementById('goboard');
+            goboard.innerHTML = '';
+
+            // 绘制网格线
+            for (let i = 0; i < boardSize; i++) {
+                const horizontal = document.createElement('div');
+                horizontal.className = 'grid-line horizontal';
+                horizontal.style.top = `${(i + 1) * (100 / (boardSize + 1))}%`;
+                goboard.appendChild(horizontal);
+
+                const vertical = document.createElement('div');
+                vertical.className = 'grid-line vertical';
+                vertical.style.left = `${(i + 1) * (100 / (boardSize + 1))}%`;
+                goboard.appendChild(vertical);
+            }
+
+            // 添加星位
+            const starPoints = [
+                [3, 3], [3, 9], [3, 15],
+                [9, 3], [9, 9], [9, 15],
+                [15, 3], [15, 9], [15, 15]
+            ];
+
+            starPoints.forEach(([row, col]) => {
+                const star = document.createElement('div');
+                star.className = 'star-point';
+                star.style.left = `${(col + 1) * (100 / (boardSize + 1))}%`;
+                star.style.top = `${(row + 1) * (100 / (boardSize + 1))}%`;
+                goboard.appendChild(star);
+            });
+
+            // 添加预览和点击事件
+            goboard.addEventListener('mousemove', handleMouseMove);
+            goboard.addEventListener('mouseleave', removePreview);
+            goboard.addEventListener('click', handleBoardClick);
+        }
+
+        function handleMouseMove(e) {
+            removePreview();
+            const rect = e.target.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const gridSize = rect.width / (boardSize + 1);
+            const col = Math.round(x / gridSize) - 1;
+            const row = Math.round(y / gridSize) - 1;
+
+            if (col >= 0 && col < boardSize && row >= 0 && row < boardSize && !board[row][col]) {
+                const preview = document.createElement('div');
+                preview.className = `stone ${currentPlayer} preview`;
+                preview.style.left = `${(col + 1) * (100 / (boardSize + 1))}%`;
+                preview.style.top = `${(row + 1) * (100 / (boardSize + 1))}%`;
+                preview.id = 'preview';
+                document.getElementById('goboard').appendChild(preview);
+            }
+        }
+
+        function removePreview() {
+            const preview = document.getElementById('preview');
+            if (preview) preview.remove();
+        }
+
+        function handleBoardClick(e) {
+            const rect = document.getElementById('goboard').getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const gridSize = rect.width / (boardSize + 1);
+            const col = Math.round(x / gridSize) - 1;
+            const row = Math.round(y / gridSize) - 1;
+
+            if (col >= 0 && col < boardSize && row >= 0 && row < boardSize && !board[row][col]) {
+                if (isValidMove(row, col)) {
+                    placeStone(row, col);
+                    consecutivePasses = 0;
+                }
+            }
+        }
+
+        function isValidMove(row, col) {
+            if (board[row][col]) return false;
+
+            // 临时放置棋子
+            board[row][col] = currentPlayer;
+            
+            // 检查是否有气
+            const group = findGroup(row, col);
+            const hasLiberties = checkLiberties(group);
+            
+            // 如果没有气，检查是否能提子
+            if (!hasLiberties) {
+                // 检查是否能提掉对方的子
+                const capturedStones = findCapturedStones(currentPlayer === 'black' ? 'white' : 'black');
+                if (capturedStones.length === 0) {
+                    // 如果不能提子且自己没气，则是自杀，不合法
+                    board[row][col] = null;
+                    return false;
+                }
+            }
+
+            // 恢复棋盘状态
+            board[row][col] = null;
+            return true;
+        }
+
+        function findGroup(row, col, visited = new Set()) {
+            const key = `${row},${col}`;
+            if (visited.has(key)) return [];
+            visited.add(key);
+
+            const color = board[row][col];
+            if (!color) return [];
+
+            let group = [[row, col]];
+            const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+
+            for (const [dx, dy] of directions) {
+                const newRow = row + dx;
+                const newCol = col + dy;
+                if (newRow >= 0 && newRow < boardSize && 
+                    newCol >= 0 && newCol < boardSize && 
+                    board[newRow][newCol] === color) {
+                    group = group.concat(findGroup(newRow, newCol, visited));
+                }
+            }
+
+            return group;
+        }
+
+        function checkLiberties(group) {
+            const liberties = new Set();
+            const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+
+            for (const [row, col] of group) {
+                for (const [dx, dy] of directions) {
+                    const newRow = row + dx;
+                    const newCol = col + dy;
+                    if (newRow >= 0 && newRow < boardSize && 
+                        newCol >= 0 && newCol < boardSize && 
+                        !board[newRow][newCol]) {
+                        liberties.add(`${newRow},${newCol}`);
+                    }
+                }
+            }
+
+            return liberties.size > 0;
+        }
+
+        function findCapturedStones(color) {
+            let capturedStones = [];
+            for (let row = 0; row < boardSize; row++) {
+                for (let col = 0; col < boardSize; col++) {
+                    if (board[row][col] === color) {
+                        const group = findGroup(row, col);
+                        if (!checkLiberties(group)) {
+                            capturedStones = capturedStones.concat(group);
+                        }
+                    }
+                }
+            }
+            return capturedStones;
+        }
+
+        function placeStone(row, col) {
+            // 记录当前状态
+            const boardState = board.map(row => [...row]);
+            const currentScores = { ...scores };
+
+            // 放置棋子
+            board[row][col] = currentPlayer;
+            const stone = document.createElement('div');
+            stone.className = `stone ${currentPlayer}`;
+            stone.style.left = `${(col + 1) * (100 / (boardSize + 1))}%`;
+            stone.style.top = `${(row + 1) * (100 / (boardSize + 1))}%`;
+            document.getElementById('goboard').appendChild(stone);
+
+            // 提取被吃掉的棋子
+            const capturedStones = findCapturedStones(currentPlayer === 'black' ? 'white' : 'black');
+            capturedStones.forEach(([r, c]) => {
+                board[r][c] = null;
+                scores[currentPlayer]++;
+                // 移除被吃掉的棋子
+                const stones = document.getElementsByClassName('stone');
+                for (const stone of stones) {
+                    const stoneLeft = parseFloat(stone.style.left);
+                    const stoneTop = parseFloat(stone.style.top);
+                    const expectedLeft = (c + 1) * (100 / (boardSize + 1));
+                    const expectedTop = (r + 1) * (100 / (boardSize + 1));
+                    if (Math.abs(stoneLeft - expectedLeft) < 0.1 && 
+                        Math.abs(stoneTop - expectedTop) < 0.1) {
+                        stone.remove();
+                        break;
+                    }
+                }
+            });
+
+            // 更新分数显示
+            document.getElementById('blackScore').textContent = `提子: ${scores.black}`;
+            document.getElementById('whiteScore').textContent = `提子: ${scores.white}`;
+
+            // 记录移动历史
+            moveHistory.push({
+                row,
+                col,
+                player: currentPlayer,
+                boardState,
+                capturedStones,
+                scores: currentScores
+            });
+
+            // 切换玩家
+            currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+            document.getElementById('currentTurn').textContent = currentPlayer === 'black' ? '黑方' : '白方';
+            removePreview();
+        }
+
+        function startNewGame() {
+            const goboard = document.getElementById('goboard');
+            goboard.innerHTML = '';
+            board = Array(boardSize).fill().map(() => Array(boardSize).fill(null));
+            currentPlayer = 'black';
+            moveHistory = [];
+            scores = { black: 0, white: 0 };
+            consecutivePasses = 0;
+            document.getElementById('currentTurn').textContent = '黑方';
+            document.getElementById('blackScore').textContent = '提子: 0';
+            document.getElementById('whiteScore').textContent = '提子: 0';
+            initBoard();
+        }
+
+        function undoMove() {
+            if (moveHistory.length === 0) return;
+
+            const lastMove = moveHistory.pop();
+            board = lastMove.boardState;
+            scores = lastMove.scores;
+            currentPlayer = lastMove.player;
+            
+            // 重新绘制棋盘
+            const goboard = document.getElementById('goboard');
+            goboard.innerHTML = '';
+            initBoard();
+
+            // 重新放置所有棋子
+            for (let row = 0; row < boardSize; row++) {
+                for (let col = 0; col < boardSize; col++) {
+                    if (board[row][col]) {
+                        const stone = document.createElement('div');
+                        stone.className = `stone ${board[row][col]}`;
+                        stone.style.left = `${(col + 1) * (100 / (boardSize + 1))}%`;
+                        stone.style.top = `${(row + 1) * (100 / (boardSize + 1))}%`;
+                        goboard.appendChild(stone);
+                    }
+                }
+            }
+
+            // 更新显示
+            document.getElementById('currentTurn').textContent = currentPlayer === 'black' ? '黑方' : '白方';
+            document.getElementById('blackScore').textContent = `提子: ${scores.black}`;
+            document.getElementById('whiteScore').textContent = `提子: ${scores.white}`;
+        }
+
+        function pass() {
+            consecutivePasses++;
+            if (consecutivePasses === 2) {
+                alert('双方连续虚着，游戏结束！\n黑方提子：' + scores.black + '\n白方提子：' + scores.white);
+                startNewGame();
+                return;
+            }
+
+            moveHistory.push({
+                pass: true,
+                player: currentPlayer,
+                boardState: board.map(row => [...row]),
+                scores: { ...scores }
+            });
+
+            currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+            document.getElementById('currentTurn').textContent = currentPlayer === 'black' ? '黑方' : '白方';
+        }
+
+        // 页面加载完成后初始化游戏
+        document.addEventListener('DOMContentLoaded', initBoard);
+    </script>
+</body>
+</html> 

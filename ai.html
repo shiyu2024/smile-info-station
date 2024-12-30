@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微笑AI - 智能对话助手</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-color: #4F46E5;
+            --hover-color: #4338CA;
+            --bg-color: #F3F4F6;
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --border-color: #E5E7EB;
+            --success-color: #10B981;
+            --error-color: #EF4444;
+        }
+
+        body {
+            background: linear-gradient(135deg, #EEF2FF 0%, #F3F4F6 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .chat-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .chat-header h1 {
+            color: var(--text-primary);
+            font-size: 2.2em;
+            margin-bottom: 12px;
+            background: linear-gradient(120deg, var(--primary-color), #6366F1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .chat-header p {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            margin: 0;
+        }
+
+        .chat-messages {
+            height: 600px;
+            overflow-y: auto;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            background: var(--bg-color);
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) var(--bg-color);
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: var(--bg-color);
+            border-radius: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .message {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: flex-start;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin: 0 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid white;
+            transition: transform 0.3s ease;
+        }
+
+        .message-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 16px 20px;
+            border-radius: 20px;
+            background: white;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            line-height: 1.6;
+        }
+
+        .message.user .message-content {
+            background: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.assistant .message-content {
+            background: white;
+            color: var(--text-primary);
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 15px;
+            padding: 25px;
+            background: var(--bg-color);
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .chat-input textarea {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            resize: none;
+            height: 60px;
+            font-family: inherit;
+            font-size: 1em;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .chat-input button {
+            padding: 0 30px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-input button:hover {
+            background: var(--hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .chat-input button:disabled {
+            background: var(--text-secondary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .chat-input button::before {
+            content: "📤";
+            font-size: 1.2em;
+        }
+
+        /* 代码块样式 */
+        pre {
+            background: #1E1E1E;
+            color: #D4D4D4;
+            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 0.95em;
+            position: relative;
+        }
+
+        pre::before {
+            content: "代码";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            font-size: 0.8em;
+            border-bottom-left-radius: 8px;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            line-height: 1.5;
+        }
+
+        /* 返回按钮样式 */
+        .back-button {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            padding: 12px 24px;
+            background: var(--card-bg);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.2);
+        }
+
+        /* Markdown 样式 */
+        .message-content {
+            line-height: 1.7;
+            font-size: 1em;
+        }
+
+        .message-content p {
+            margin: 10px 0;
+        }
+
+        .message-content ul, .message-content ol {
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+
+        .message-content h1, .message-content h2, .message-content h3 {
+            margin: 20px 0 12px 0;
+            color: var(--text-primary);
+        }
+
+        .message-content a {
+            color: var(--primary-color);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--primary-color);
+        }
+
+        .message-content a:hover {
+            border-bottom-style: solid;
+        }
+
+        /* 加载动画 */
+        .typing-indicator {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            background: var(--bg-color);
+            border-radius: 15px;
+            margin: 10px 0;
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.4s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes typing {
+            0%, 100% { transform: translateY(0); opacity: 0.4; }
+            50% { transform: translateY(-8px); opacity: 1; }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .chat-container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .chat-messages {
+                height: 500px;
+                padding: 15px;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chat-container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            .chat-header h1 {
+                font-size: 1.8em;
+            }
+
+            .message-avatar {
+                width: 35px;
+                height: 35px;
+                margin: 0 8px;
+            }
+
+            .chat-input {
+                padding: 15px;
+            }
+
+            .chat-input button {
+                padding: 0 20px;
+            }
+        }
+
+        /* 操作按钮样式 */
+        .action-buttons {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .clear-history-btn, .new-chat-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+            color: white;
+        }
+
+        .clear-history-btn {
+            background: var(--error-color);
+        }
+
+        .new-chat-btn {
+            background: var(--success-color);
+        }
+
+        .clear-history-btn:hover, .new-chat-btn:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        .clear-history-btn:hover {
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .new-chat-btn:hover {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        @media (max-width: 480px) {
+            .action-buttons {
+                top: auto;
+                bottom: 10px;
+                right: 10px;
+            }
+
+            .clear-history-btn, .new-chat-btn {
+                font-size: 0.8em;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes"></div>
+    <a href="index.html" class="back-button">
+        <span>←</span>
+        返回首页
+    </a>
+    
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>微笑AI 智能对话助手</h1>
+            <p>基于微笑AI大语言模型，为您提供智能对话服务</p>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <!-- 消息将在这里动态添加 -->
+        </div>
+        
+        <div class="chat-input">
+            <textarea id="userInput" placeholder="输入您的问题，按回车发送..." onkeydown="if(event.keyCode === 13 && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
+            <button onclick="sendMessage()" id="sendButton">发送</button>
+        </div>
+    </div>
+
+    <script>
+        // 初始化变量
+        let isProcessing = false;
+        const API_ENDPOINT = 'https://api.deepseek.com/v1/chat/completions';
+        const API_KEY = 'sk-0f9275c2239f481db600e0d9eaf0413d';
+        let messageHistory = [];
+
+        // 从本地存储加载历史记录
+        function loadHistory() {
+            const savedHistory = localStorage.getItem('chatHistory');
+            if (savedHistory) {
+                messageHistory = JSON.parse(savedHistory);
+                messageHistory.forEach(message => addMessage(message));
+            } else {
+                const welcomeMessage = {
+                    role: 'assistant',
+                    content: '你好！我是微笑AI，一个基于微笑AI大模型的智能对话助手。我可以帮你回答问题、编写代码、解决问题等。请问有什么我可以帮你的吗？'
+                };
+                messageHistory.push(welcomeMessage);
+                addMessage(welcomeMessage);
+                saveHistory();
+            }
+        }
+
+        // 保存历史记录到本地存储
+        function saveHistory() {
+            localStorage.setItem('chatHistory', JSON.stringify(messageHistory));
+        }
+
+        // 清除历史记录
+        function clearHistory() {
+            messageHistory = [];
+            localStorage.removeItem('chatHistory');
+            document.getElementById('chatMessages').innerHTML = '';
+            loadHistory(); // 重新加载欢迎消息
+        }
+
+        // 添加操作按钮
+        function addActionButtons() {
+            const chatHeader = document.querySelector('.chat-header');
+            const actionButtons = document.createElement('div');
+            actionButtons.className = 'action-buttons';
+
+            const newChatButton = document.createElement('button');
+            newChatButton.className = 'new-chat-btn';
+            newChatButton.innerHTML = '新对话';
+            newChatButton.onclick = startNewChat;
+
+            const clearButton = document.createElement('button');
+            clearButton.className = 'clear-history-btn';
+            clearButton.innerHTML = '清除历史';
+            clearButton.onclick = clearHistory;
+
+            actionButtons.appendChild(newChatButton);
+            actionButtons.appendChild(clearButton);
+            chatHeader.appendChild(actionButtons);
+        }
+
+        // 开始新对话
+        function startNewChat() {
+            // 保留历史记录但清空聊天界面
+            document.getElementById('chatMessages').innerHTML = '';
+            // 添加新的欢迎消息
+            const welcomeMessage = {
+                role: 'assistant',
+                content: '你好！让我们开始新的对话吧。有什么我可以帮你的吗？'
+            };
+            addMessage(welcomeMessage);
+            // 重置消息历史但保留在localStorage中的完整历史
+            messageHistory = [welcomeMessage];
+        }
+
+        // 页面加载时初始化
+        window.onload = function() {
+            loadHistory();
+            addActionButtons();
+        };
+
+        // 发送消息函数
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (message === '' || isProcessing) return;
+            
+            // 禁用输入和发送按钮
+            isProcessing = true;
+            input.disabled = true;
+            document.getElementById('sendButton').disabled = true;
+            
+            // 添加用户消息
+            const userMessage = {
+                role: 'user',
+                content: message
+            };
+            messageHistory.push(userMessage);
+            addMessage(userMessage);
+            saveHistory();
+            
+            // 清空输入框
+            input.value = '';
+            
+            // 显示加载动画
+            showTypingIndicator();
+
+            try {
+                // 调用API
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: messageHistory,
+                        temperature: 0.7,
+                        max_tokens: 2000,
+                        stream: false
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // 移除加载动画
+                removeTypingIndicator();
+                
+                // 添加AI响应
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    const assistantMessage = data.choices[0].message;
+                    messageHistory.push(assistantMessage);
+                    addMessage(assistantMessage);
+                    saveHistory();
+                } else {
+                    throw new Error('Invalid response format');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                removeTypingIndicator();
+                const errorMessage = {
+                    role: 'assistant',
+                    content: '抱歉，发生了一些错误。错误信息：' + error.message
+                };
+                messageHistory.push(errorMessage);
+                addMessage(errorMessage);
+                saveHistory();
+            }
+            
+            // 重新启用输入和发送按钮
+            isProcessing = false;
+            input.disabled = false;
+            document.getElementById('sendButton').disabled = false;
+            input.focus();
+        }
+
+        // 添加消息到聊天界面
+        function addMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${message.role}`;
+            
+            const avatar = document.createElement('img');
+            avatar.className = 'message-avatar';
+            avatar.src = message.role === 'user' 
+                ? 'https://api.dicebear.com/6.x/avataaars/svg?seed=user' 
+                : 'https://api.dicebear.com/6.x/bottts/svg?seed=ai';
+            avatar.alt = message.role === 'user' ? '用户头像' : 'AI头像';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.innerHTML = markdownToHtml(message.content);
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            chatMessages.appendChild(messageDiv);
+            
+            // 滚动到底部
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Markdown转HTML的简单实现
+        function markdownToHtml(text) {
+            // 这里可以使用更完整的Markdown解析库
+            return text
+                .replace(/\n/g, '<br>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>');
+        }
+
+        // 显示输入中动画
+        function showTypingIndicator() {
+            const chatMessages = document.getElementById('chatMessages');
+            const indicator = document.createElement('div');
+            indicator.className = 'typing-indicator';
+            indicator.id = 'typingIndicator';
+            
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                indicator.appendChild(dot);
+            }
+            
+            chatMessages.appendChild(indicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 移除输入中动画
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+    </script>
+</body>
+</html> 

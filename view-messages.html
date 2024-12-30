@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>查看留言</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .messages-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+        }
+
+        .page-title h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .messages-list {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+
+        .message-item {
+            padding: 20px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .message-item:last-child {
+            border-bottom: none;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+        }
+
+        .message-info {
+            flex: 1;
+        }
+
+        .message-author {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .message-content {
+            margin-left: 52px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .write-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+        }
+
+        .back-btn {
+            background: var(--primary-color);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .delete-btn {
+            padding: 4px 10px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .message-header {
+            position: relative;
+        }
+
+        .message-header .delete-btn {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .empty-message {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            padding: 40px;
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="messages-container">
+        <div class="page-header">
+            <div class="page-title">
+                <span class="icon">💬</span>
+                <h1>留言列表</h1>
+            </div>
+            <div class="action-buttons">
+                <a href="write-message.html" class="action-btn write-btn">写留言</a>
+                <a href="index.html" class="action-btn back-btn">返回首页</a>
+            </div>
+        </div>
+        <div class="messages-list" id="messagesList">
+            <!-- 留言内容将通过 JavaScript 动态加载 -->
+        </div>
+    </div>
+
+    <script>
+        // 检查登录状态
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'login.html';
+        }
+
+        // 加载留言列表
+        function loadMessages() {
+            const messagesList = document.getElementById('messagesList');
+            // 从 localStorage 获取留言数据
+            const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+
+            if (messages.length === 0) {
+                messagesList.innerHTML = `
+                    <div class="empty-message" style="text-align: center; padding: 40px; color: #666;">
+                        还没有人留言，来写第一条吧！
+                    </div>
+                `;
+                return;
+            }
+
+            messagesList.innerHTML = messages.map(message => `
+                <div class="message-item">
+                    <div class="message-header">
+                        <img src="${message.avatar}" alt="头像" class="message-avatar">
+                        <div class="message-info">
+                            <div class="message-author">${message.author}</div>
+                            <div class="message-time">${message.time}</div>
+                        </div>
+                        ${message.userId === currentUser ? `
+                            <button onclick="deleteMessage('${message.time}')" class="delete-btn">
+                                删除
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="message-content">${message.content}</div>
+                </div>
+            `).join('');
+        }
+
+        // 添加删除留言功能
+        function deleteMessage(messageTime) {
+            if (confirm('确定要删除这条留言吗？')) {
+                let messages = JSON.parse(localStorage.getItem('messages') || '[]');
+                messages = messages.filter(msg => msg.time !== messageTime);
+                localStorage.setItem('messages', JSON.stringify(messages));
+                loadMessages();
+            }
+        }
+
+        // 页面加载时加载留言
+        document.addEventListener('DOMContentLoaded', loadMessages);
+
+        // 添加删除按钮样式
+        const style = document.createElement('style');
+        style.textContent = `
+            .delete-btn {
+                padding: 4px 10px;
+                background: #ef4444;
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .delete-btn:hover {
+                background: #dc2626;
+                transform: translateY(-1px);
+            }
+
+            .message-header {
+                position: relative;
+            }
+
+            .message-header .delete-btn {
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .empty-message {
+                font-size: 16px;
+                color: #666;
+                text-align: center;
+                padding: 40px;
+                background: rgba(59, 130, 246, 0.05);
+                border-radius: 12px;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html> 

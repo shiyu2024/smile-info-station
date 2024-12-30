@@ -349,57 +349,212 @@ footer {
 
 /* 联系区域样式 */
 .contact-area {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
     gap: 30px;
-    margin: 40px 0;
+    margin: 40px auto;
+    max-width: 1000px;
+    padding: 0 20px;
+    align-items: stretch;  /* 让两个部分等高 */
 }
 
-.contact-section {
-    background: var(--card-bg);
+/* 留言板部分 */
+.message-board {
+    flex: 1.2;  /* 稍微宽一点 */
+    margin-top: 0;  /* 移除顶部间距 */
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.message-board:hover {
+    transform: translateY(-5px);
+}
+
+/* QQ联系方式部分 */
+.qq-contact {
+    flex: 0.8;  /* 稍微窄一点 */
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.qq-contact:hover {
+    transform: translateY(-5px);
+}
+
+/* 内容样式优化 */
+.message-content {
     padding: 25px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
 }
 
-.contact-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, var(--primary-color), var(--hover-color));
+.message-tips {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background: rgba(59, 130, 246, 0.05);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
 }
 
-.contact-section .section-header {
+#vcomments {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.qq-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    padding: 25px;
+    height: 100%;
+    justify-content: center;
+}
+
+/* 统一标题样式 */
+.section-header {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.1);
 }
 
 .header-icon {
     font-size: 24px;
-    background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    -moz-text-fill-color: transparent;
+    color: var(--primary-color);
 }
 
-/* QQ卡片样式 */
-.qq-content {
+.section-header h2 {
+    font-size: 20px;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .contact-area {
+        flex-direction: column;
+        padding: 0 15px;
+    }
+    
+    .message-board, .qq-contact {
+        width: 100%;
+        margin: 0;
+        margin-bottom: 20px;
+    }
+    
+    .message-content, .qq-content {
+        padding: 20px;
+    }
+}
+
+.qq-avatar-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+.qq-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid var(--primary-color);
+    transition: transform 0.5s ease;
+    object-fit: cover;
+}
+
+.avatar-glow {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0.3;
+    filter: blur(8px);
+}
+
+.qq-info {
+    text-align: center;
     display: flex;
+    flex-direction: column;
+    gap: 15px;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
-    background: rgba(59,130,246,0.05);
-    border-radius: 15px;
+}
+
+.qq-number {
+    font-size: 18px;
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.qq-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 25px;
+    background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+    color: white;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.qq-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(59,130,246,0.3);
+}
+
+/* 留言板样式优化 */
+.message-content {
+    padding: 15px;
+}
+
+#vcomments {
+    padding: 15px;
+    max-width: 100%;  /* 使用百分比宽度 */
+}
+
+.v[data-class=v] .vwrap {
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.v[data-class=v] .veditor {
+    min-height: 80px;
+    padding: 8px;
+}
+
+.v[data-class=v] .vcard {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .contact-area {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .message-board {
+        margin-top: 20px;
+        max-width: 100%;
+    }
+    
+    .qq-contact {
+        position: static;
+        width: 100%;
+    }
 }
 
 .qq-avatar-wrapper {
@@ -483,14 +638,14 @@ footer {
 .v[data-class=v] .vwrap {
     border: 1px solid rgba(59,130,246,0.2);
     border-radius: 8px;
-    padding: 15px;
+    padding: 10px;  /* 减小评论框内边距 */
     margin-bottom: 20px;
     background: white;
 }
 
 .v[data-class=v] .veditor {
-    min-height: 100px !important;
-    padding: 10px !important;
+    min-height: 80px;  /* 减小编辑器高度 */
+    padding: 8px;
     border: 1px solid #e0e0e0 !important;
     border-radius: 4px !important;
     font-size: 14px !important;
@@ -524,7 +679,7 @@ footer {
 .v[data-class=v] .vbtn:hover {
     background: var(--hover-color) !important;
     transform: translateY(-2px) !important;
-    box-shadow: 0 4px 12px rgba(59,130,246,0.2) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
 }
 
 /* 评论列表样式 */
@@ -537,7 +692,7 @@ footer {
 .v[data-class=v] .vcard {
     background: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
-    padding: 15px;
+    padding: 8px 0;  /* 减小评论卡片间距 */
     margin-bottom: 15px;
     border: 1px solid rgba(59, 130, 246, 0.1);
     transition: all 0.3s ease;
@@ -603,11 +758,20 @@ footer {
 @media (max-width: 768px) {
     .contact-area {
         grid-template-columns: 1fr;
+        padding: 0 15px;
+    }
+    
+    .contact-section {
+        padding: 20px;
     }
     
     .qq-content {
-        flex-direction: column;
-        text-align: center;
+        padding: 15px;
+    }
+    
+    .qq-avatar-wrapper {
+        width: 80px;
+        height: 80px;
     }
 }
 
@@ -987,28 +1151,28 @@ footer {
 
 .v[data-class=v] .veditor {
     min-height: 100px !important;
-    background-color: #fff !important;
     padding: 10px !important;
     border: 1px solid #e0e0e0 !important;
     border-radius: 4px !important;
     font-size: 14px !important;
-    line-height: 1.6 !important;
+    background: white !important;
     width: 100% !important;
-    box-sizing: border-box !important;
+    resize: vertical !important;
 }
 
 .v[data-class=v] .vinput {
-    padding: 8px 12px !important;
     border: 1px solid #e0e0e0 !important;
+    padding: 8px 12px !important;
     border-radius: 4px !important;
     font-size: 14px !important;
+    background: white !important;
     width: 100% !important;
     margin-bottom: 10px !important;
 }
 
 .v[data-class=v] .vbtn {
     display: inline-block !important;
-    background-color: var(--primary-color) !important;
+    background: var(--primary-color) !important;
     color: white !important;
     padding: 8px 16px !important;
     border: none !important;
@@ -1016,13 +1180,10 @@ footer {
     cursor: pointer !important;
     font-size: 14px !important;
     transition: all 0.3s ease !important;
-    margin-top: 10px !important;
-    position: relative !important;
-    z-index: 1 !important;
 }
 
 .v[data-class=v] .vbtn:hover {
-    background-color: var(--hover-color) !important;
+    background: var(--hover-color) !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2) !important;
 }
@@ -1376,51 +1537,96 @@ footer {
 /* 评论卡片样式 */
 .v[data-class=v] .vcard {
     background: rgba(255, 255, 255, 0.8);
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 15px;
     margin-bottom: 15px;
     border: 1px solid rgba(59, 130, 246, 0.1);
     transition: all 0.3s ease;
 }
 
-.v[data-class=v] .vcard:last-child {
-    margin-bottom: 0;
-}
-
-.v[data-class=v] .vcard:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
-}
-
-/* 评论内容样式 */
+/* 评论头部样式 */
 .v[data-class=v] .vhead {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+/* 头像样式 */
+.v[data-class=v] .vavatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--primary-color);
+    padding: 2px;
+    background: white;
+    flex-shrink: 0;
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.15);
+    transition: all 0.3s ease;
+}
+
+.v[data-class=v] .vavatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.v[data-class=v] .vcard:hover .vavatar {
+    transform: scale(1.1);
+    border-color: var(--hover-color);
+    box-shadow: 0 6px 12px rgba(59, 130, 246, 0.2);
+}
+
+.v[data-class=v] .vcard:hover .vavatar img {
+    transform: rotate(360deg);
+}
+
+/* 用户信息样式 */
+.v[data-class=v] .vhead .vinfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .v[data-class=v] .vnick {
     color: var(--primary-color);
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 15px;
 }
 
 .v[data-class=v] .vtime {
     color: #666;
-    font-size: 0.9em;
+    font-size: 12px;
 }
 
+/* 评论内容样式 */
 .v[data-class=v] .vcontent {
     color: var(--text-primary);
     line-height: 1.6;
     font-size: 14px;
     padding: 8px 0;
+    margin-left: 60px;  /* 调整与头像的间距 */
+}
+
+/* 评论卡片悬停效果 */
+.v[data-class=v] .vcard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
 }
 
 /* 移动端适配 */
 @media (max-width: 768px) {
-    .comments-list {
-        max-height: 250px;
+    .v[data-class=v] .vavatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .v[data-class=v] .vcontent {
+        margin-left: 52px;
     }
 }
 

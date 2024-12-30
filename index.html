@@ -33,10 +33,10 @@
                     <h3>书籍分享</h3>
                     <p>分享好书和读书心得</p>
                 </a>
-                <a href="life.html" class="feature-card life">
-                    <div class="card-icon">🌟</div>
-                    <h3>生活随笔</h3>
-                    <p>记录生活的点点滴滴</p>
+                <a href="ai.html" class="feature-card life">
+                    <div class="card-icon">🤖</div>
+                    <h3>微笑AI</h3>
+                    <p>AI智能对话助手</p>
                 </a>
                 <a href="monthly.html" class="feature-card monthly">
                     <div class="card-icon">📅</div>
@@ -60,7 +60,7 @@
                     <ul class="showcase-list">
                         <li><a href="https://www.douyin.com" target="_blank" class="site-link">抖音 - 记录美好生活</a></li>
                         <li><a href="https://www.bilibili.com" target="_blank" class="site-link">哔哩哔哩 - 视频创作分享</a></li>
-                        <li><a href="https://www.xiaohongshu.com" target="_blank" class="site-link">小红书 - 分享生活社区</a></li>
+                        <li><a href="http://192.168.73.69/cas/login?service=http%3A%2F%2F192.168.73.155%2F" target="_blank" class="site-link">机电学院 - 成绩课表查询</a></li>
                         <li><a href="https://www.scemi.com/index.htm" target="_blank" class="site-link">机电学院</a></li>
                     </ul>
                 </div>
@@ -72,7 +72,7 @@
                     </div>
                     <ul class="showcase-list">
                         <li><a href="https://www.remove.bg/zh" target="_blank" class="site-link">Remove.bg - 在线抠图工具</a></li>
-                
+                        <li><a href="https://www.z-library.org" target="_blank" class="site-link">Z-Library - 免费电子书下载</a></li>
                         <li><a href="https://www.kkys03.com" target="_blank" class="site-link">免费看全网影视资源</a></li>
                         <li><a href="https://www.deepl.com/translator" target="_blank" class="site-link">DeepL - 免费在线翻译</a></li>
                     </ul>
@@ -94,19 +94,36 @@
 
             <!-- 联系部分 -->
             <div class="contact-area">
-                <!-- 留言板 -->
+                <!-- 左侧留言板 -->
                 <div class="contact-section message-board">
                     <div class="section-header">
                         <div class="header-icon">💌</div>
                         <h2>留言板</h2>
                     </div>
                     <div class="message-content">
-                        <p class="message-tips">在下方留言，无需登录，填写昵称即可~</p>
-                        <div id="vcomments"></div>
+                        <!-- 未登录状态 -->
+                        <div class="auth-area" id="authArea">
+                            <div class="auth-buttons">
+                                <a href="login.html" class="auth-btn login-btn">登录</a>
+                                <a href="register.html" class="auth-btn register-btn">注册</a>
+                            </div>
+                        </div>
+                        <!-- 登录后状态 -->
+                        <div class="message-actions" id="messageActions" style="display: none;">
+                            <div class="user-info">
+                                <img src="" alt="头像" class="user-avatar" id="userAvatar">
+                                <span class="user-name" id="userName"></span>
+                                <a href="#" class="logout-btn" onclick="logout()">退出</a>
+                            </div>
+                            <div class="message-buttons">
+                                <a href="view-messages.html" class="message-btn">查看留言</a>
+                                <a href="write-message.html" class="message-btn">写留言</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- QQ联系卡片 -->
+                <!-- 右侧联系卡片 -->
                 <div class="contact-section qq-card">
                     <div class="section-header">
                         <div class="header-icon">💬</div>
@@ -141,7 +158,7 @@
                 "网站刚开始搭建很多功能还没有",
                 "不被理解才是你脱颖而出的法宝",
                 "有什么意见可以在下方留言",
-                "目前在尝试看能不能接入好用的大模型的API实现网站的AI对话",
+                "网站已接入好用的AI大模型欢迎体验",
                 "后续会不断的维护和更新网站，后期将打造出一个较为全面的网站"
             ];
 
@@ -160,41 +177,321 @@
             updateText();
             setInterval(updateText, 5000);
 
-            // 初始化 Valine
+        // 初始化 Valine
             setTimeout(() => {
                 const valine = new Valine({
-                    el: '#vcomments',
-                    appId: 'luZZpOFMr3pLq06GIuvl7F3w-gzGzoHsz',
-                    appKey: 'IHtrVZAXj3CUpKkA1X2cfQbU',
-                    placeholder: '说点什么吧...(无需登录)',
-                    avatar: 'monsterid',
-                    meta: ['nick'],
-                    requiredFields: ['nick'],
-                    enableQQ: false,
-                    visitor: true,
-                    recordIP: false,
+            el: '#vcomments',
+            appId: 'luZZpOFMr3pLq06GIuvl7F3w-gzGzoHsz',
+            appKey: 'IHtrVZAXj3CUpKkA1X2cfQbU',
+                    avatar: 'retro',
+                    avatarForce: true,
+                    meta: ['nick', 'mail'],
+                    requiredFields: ['nick', 'mail'],
+                    placeholder: '请先登录后发表评论~',
                     path: window.location.pathname,
                     pageSize: 2,
                     maxNest: 1,
-                    lang: 'zh-CN'
+                    lang: 'zh-CN',
+            visitor: true,
+                    recordIP: false,
+                    serverURLs: 'https://luzzpofm.lc-cn-n1-shared.com'
                 });
 
-                // 将评论列表移动到历史留言区域
-                const observer = new MutationObserver((mutations) => {
-                    const commentsList = document.querySelector('.v .vlist');
-                    const historyList = document.getElementById('vcomments-list');
-                    if (commentsList && historyList) {
-                        historyList.innerHTML = '';
-                        historyList.appendChild(commentsList.cloneNode(true));
+                // 检查登录状态并控制评论框
+                function checkLoginStatus() {
+                    const currentUser = localStorage.getItem('currentUser');
+                    const authArea = document.getElementById('authArea');
+                    const messageActions = document.getElementById('messageActions');
+
+                    if (currentUser) {
+                        // 已登录状态
+                        const userData = JSON.parse(localStorage.getItem('user_' + currentUser));
+                        document.getElementById('userAvatar').src = userData.avatar;
+                        document.getElementById('userName').textContent = userData.username;
+                        authArea.style.display = 'none';
+                        messageActions.style.display = 'block';
+                    } else {
+                        // 未登录状态
+                        authArea.style.display = 'block';
+                        messageActions.style.display = 'none';
                     }
-                });
+                }
 
-                observer.observe(document.getElementById('vcomments'), {
-                    childList: true,
-                    subtree: true
-                });
+                // 页面加载时检查登录状态
+                checkLoginStatus();
+
+                // 添加评论区遮罩层样式
+                const overlayStyle = document.createElement('style');
+                overlayStyle.textContent = `
+                    .comment-overlay {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: rgba(255, 255, 255, 0.9);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 100;
+                    }
+
+                    .overlay-content {
+                        text-align: center;
+                        padding: 20px;
+                    }
+
+                    .overlay-content p {
+                        margin-bottom: 15px;
+                        color: #666;
+                    }
+
+                    .overlay-buttons {
+                        display: flex;
+                        gap: 10px;
+                        justify-content: center;
+                    }
+
+                    .overlay-btn {
+                        padding: 8px 20px;
+                        border-radius: 20px;
+                        color: white;
+                        text-decoration: none;
+                        transition: all 0.3s ease;
+                    }
+
+                    .overlay-btn.login {
+                        background: var(--primary-color);
+                    }
+
+                    .overlay-btn.register {
+                        background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+                    }
+
+                    .overlay-btn:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+                    }
+
+                    #vcomments {
+                        position: relative;
+                        min-height: 150px;
+                    }
+                `;
+                document.head.appendChild(overlayStyle);
             }, 500);
+
+            // 退出登录函数
+            function logout() {
+                localStorage.removeItem('currentUser');
+                window.location.reload();
+            }
         });
+
+        // 添加退出登录函数
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.reload();
+        }
+
+        // 添加样式
+        const style = document.createElement('style');
+        style.textContent = `
+            .auth-buttons {
+                margin-left: auto;
+                display: flex;
+                gap: 10px;
+            }
+
+            .login-btn, .register-btn {
+                padding: 6px 15px;
+                color: white;
+                border-radius: 20px;
+                text-decoration: none;
+                font-size: 14px;
+                transition: all 0.3s ease;
+            }
+
+            .login-btn {
+                background: var(--primary-color);
+            }
+
+            .register-btn {
+                background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+            }
+
+            .login-btn:hover, .register-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+            }
+
+            .message-board {
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 15px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                padding: 15px;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .message-content {
+                flex: 1;
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            /* 未登录状态 */
+            .auth-area {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 20px 0;
+            }
+
+            .auth-buttons {
+                display: flex;
+                gap: 15px;
+            }
+
+            .auth-btn {
+                padding: 12px 25px;
+                border-radius: 8px;
+                color: white;
+                text-decoration: none;
+                font-size: 14px;
+                transition: all 0.3s ease;
+            }
+
+            .login-btn {
+                background: var(--primary-color);
+            }
+
+            .register-btn {
+                background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+            }
+
+            .auth-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+            }
+
+            /* 登录后状态 */
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px;
+                background: rgba(59, 130, 246, 0.05);
+                border-radius: 8px;
+                margin-bottom: 15px;
+            }
+
+            .user-avatar {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                border: 2px solid var(--primary-color);
+            }
+
+            .user-name {
+                flex: 1;
+                font-size: 14px;
+                color: var(--primary-color);
+            }
+
+            .logout-btn {
+                padding: 4px 10px;
+                background: #ff4757;
+                color: white;
+                border-radius: 6px;
+                text-decoration: none;
+                font-size: 12px;
+                transition: all 0.3s ease;
+            }
+
+            .logout-btn:hover {
+                background: #ff6b81;
+            }
+
+            .message-buttons {
+                display: flex;
+                gap: 10px;
+                margin-top: auto;
+            }
+
+            .message-btn {
+                flex: 1;
+                padding: 12px;
+                text-align: center;
+                border-radius: 8px;
+                color: white;
+                text-decoration: none;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                background: var(--primary-color);
+            }
+
+            .message-btn:last-child {
+                background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
+            }
+
+            .message-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+            }
+
+            /* 联系区域布局 */
+            .contact-area {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .contact-section {
+                min-height: 250px;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* QQ联系卡片样式 */
+            .qq-card {
+                background: rgba(255, 255, 255, 0.95);
+                border-radius: 15px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+                padding: 15px;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .qq-content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 15px;
+            }
+
+            /* 响应式布局 */
+            @media (max-width: 768px) {
+                .contact-area {
+                    grid-template-columns: 1fr;
+                }
+                
+                .contact-section {
+                    min-height: 200px;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
