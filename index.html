@@ -72,7 +72,7 @@
                     </div>
                     <ul class="showcase-list">
                         <li><a href="https://www.remove.bg/zh" target="_blank" class="site-link">Remove.bg - 在线抠图工具</a></li>
-                         <li><a href="https://music.163.com" target="_blank" class="site-link">网易云音乐 - 音乐平台</a></li>
+                        <li><a href="https://music.163.com" target="_blank" class="site-link">网易云音乐 - 音乐平台</a></li>
                         <li><a href="https://www.kkys03.com" target="_blank" class="site-link">免费看全网影视资源</a></li>
                         <li><a href="https://www.deepl.com/translator" target="_blank" class="site-link">DeepL - 免费在线翻译</a></li>
                     </ul>
@@ -99,9 +99,14 @@
                     <div class="section-header">
                         <div class="header-icon">💌</div>
                         <h2>留言板</h2>
-                        <div class="login-note">登录后可进行留言</div>
+                        <div class="login-note">登录后可发布留言</div>
                     </div>
                     <div class="message-content">
+                        <!-- 查看留言按钮对所有人可见 -->
+                        <div class="view-messages">
+                            <a href="view-messages.html" class="view-btn">查看留言</a>
+                        </div>
+                        
                         <!-- 未登录状态 -->
                         <div class="auth-area" id="authArea">
                             <div class="auth-buttons">
@@ -117,7 +122,6 @@
                                 <a href="#" class="logout-btn" onclick="logout()">退出</a>
                             </div>
                             <div class="message-buttons">
-                                <a href="view-messages.html" class="message-btn">查看留言</a>
                                 <a href="write-message.html" class="message-btn">写留言</a>
                             </div>
                         </div>
@@ -519,6 +523,40 @@
                     margin-top: 8px;
                     font-size: 0.8em;
                 }
+            }
+
+            /* 查看留言按钮样式 */
+            .view-messages {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .view-btn {
+                display: inline-block;
+                padding: 12px 30px;
+                background: var(--primary-color);
+                color: white;
+                border-radius: 25px;
+                text-decoration: none;
+                font-size: 1em;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
+            }
+
+            .view-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+                background: var(--hover-color);
+            }
+
+            .message-content {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .auth-area {
+                margin-top: auto;
             }
         `;
         document.head.appendChild(style);
